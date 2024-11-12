@@ -91,7 +91,7 @@ metodos.update = function (datosPaciente, dnipaciente, callback) {
         dni = parseInt(dnipaciente),
         datosPaciente.fecha_ingreso
     ];
-    const consulta = "UPDATE INGRESO SET diagnostico = ?, WHERE dni = ? AND fecha_ingreso = ?";
+    const consulta = "UPDATE INGRESO SET diagnostico = ? WHERE dni = ? AND fecha_ingreso = ?";
     
     connection.query(consulta, datos, (err, rows) => {
         if (err) {
