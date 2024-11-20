@@ -1,14 +1,6 @@
-const mysql = require("mysql");
-const configuracion = require("./config.json");
+const mysql = require('mysql2/promise');
+const config = require("./config.json");
 
-const BDconection = mysql.createConnection(configuracion.database);
+const db = mysql.createPool(config.database);
 
-BDconection.connect((err) => {
-    if (err) {
-        console.log(err.code);
-    } else {
-        console.log("BD conectada");
-    }
-});
-
-module.exports = BDconection;
+module.exports = db;
