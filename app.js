@@ -1,27 +1,44 @@
 const express = require('express');
 const app = express();
 const config = require("./config/config.json");
-const morgan = require("morgan");
 
+const morgan = require('morgan')
+app.use(morgan('common'));
+
+var cors = require('cors');
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan("tiny"));
-morgan(":method :url :status :res[content-length] - :response-time ms");
+
 
 
 app.use("/api/medico", require("./controllers/medico_controller"));
 app.use("/api/paciente", require("./controllers/paciente_controller"));
-app.use("/api/ingreso", require("./controllers/ingreso_controller"));
+app.use("/api/ingreso", require("./controllers/turno_controller"));
 app.use("/api/usuario", require("./controllers/usuario_controller"));
 app.use((req, res) => {
     res.status(404).send("Error ruta Incorrecta");
 });
 
-app.listen(config.server.port, (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("Sevidor encendido y escuchando en el puerto " + config.server.port);
-    }
+
+function startServer(puerto) {
+  const server = app.listen(puerto, () => {
+      console.log(`Servidor escuchando en: http://localhost:${puerto}`);
   });
+
+  server.on('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+          console.log(`Puerto ${puerto} en uso, intentando con el puerto ${puerto + 1}...`);
+          puerto++;
+          startServer(puerto); 
+      } else {
+          console.error("Error al iniciar el servidor:", err);
+      }
+  });
+}
+
+
+startServer(config.server.port);
+
+module.exports = app;
