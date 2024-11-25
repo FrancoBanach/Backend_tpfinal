@@ -1,0 +1,10 @@
+{
+    "server": {
+        "port": 3000},
+    "database": {
+        "host": "localhost",
+        "user": "root",
+        "password": "admin",
+        "database": "integrador"
+    }
+}
